@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'moment/locale/es';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
-import { eventClearActiveEvt, eventDeleted, eventSetActive } from '../../actions/events';
+import { eventClearActiveEvt, eventDeleted, eventSetActive, eventStartDeleted, eventStartLoading } from '../../actions/events';
 
 const localizer = momentLocalizer(moment);
 // const myEventsList = [{
@@ -30,6 +30,12 @@ export const CalendarPage = () => {
     const { events, activeEvent } = useSelector(state => state.calendar);
 
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || Views.MONTH);
+
+    useEffect(() => {
+        dispatch(eventStartLoading());
+
+    }, [dispatch])
+
 
     const onDobleClick = (e) => {
         // console.log(e);
@@ -52,7 +58,7 @@ export const CalendarPage = () => {
         dispatch(uiOpenModal());
     }
     const handleButtonDelete = () => {
-        dispatch(eventDeleted(activeEvent));
+        dispatch(eventStartDeleted(activeEvent));
     }
     const evtStyleGetter = (event, start, end, isSelected) => {
         const style = {

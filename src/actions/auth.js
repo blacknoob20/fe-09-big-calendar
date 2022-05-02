@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { fetchNoToken, fetchYesToken } from '../helpers/fetch';
 import { types } from '../types/types';
+import { eventStartLogout } from './events';
 
 export const startLogin = (email, password) => {
     // El thunk hace que el dispach lo reciba por parametro
@@ -88,6 +89,8 @@ const login = (user) => ({
 export const startLogout = () => {
     return (dispach) => {
         localStorage.clear();
+
+        dispach(eventStartLogout());
         dispach(logout());
     }
 }
